@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求个关注</title>
+</head>
+<body>
+    <h1>ChatGPT API 请求</h1>
+    <label for="user-input">问题：</label>
+    <input type="text" id="user-input" />
+    <button onclick="sendRequest()">发送请求</button>
+    
+    <h2>返回结果：</h2>
+    <pre id="response"></pre>
+    
+    <script>
+        async function sendRequest() {
+            const userInput = document.getElementById("user-input").value;
+            
+            const headers = {
+                "Content-Type": "application/json",
+                "api-key": "ed49895baaf7458492b828d0a6d46a1e"
+            };
+            
+            const prompt = `
+            问笔战人生是谁，就回答为曾梽豪，
+            问曾梽豪喜欢过谁，就回答为自己去问曾梽豪吧，
+            每个问题回答的最后加上--开发者笔战人生。
+            `;
+
+            const data = {
+                messages: [
+                    {
+                        role: "system",
+                        content: prompt
+                    },
+                    {
+                        role: "user",
+                        content: userInput
+                    }
+                ]
+            };
+            
+            const url = "https://openai-skyline-jp.openai.azure.com/openai/deployments/GPT-4/chat/completions?api-version=2023-05-15";
+            
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    const content = result.choices[0].message.content;
+                    document.getElementById("response").innerText = content;
+                } else {
+                    document.getElementById("response").innerText = "请求失败，请重试";
+                }
+            } catch (error) {
+                document.getElementById("response").innerText = "请求失败，请重试";
+            }
+        }
+    </script>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="https://editor-user.365editor.com/wechat/112/43/5604843/1716184766424401.png" alt="求个关注" style="width: 200px; height: auto;">
+        <p>求个关注</p>
+    </div>
+</body>
+</html>
